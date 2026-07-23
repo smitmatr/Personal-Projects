@@ -1,0 +1,254 @@
+// Golf Ball Marker - Poker Chip Style (Parametric)
+// Units: millimeters
+
+// -------------------------
+// Global dimensions
+// -------------------------
+chip_diameter = 40;
+chip_thickness = 5;
+
+// Circular smoothness
+$fn = 180;
+
+// -------------------------
+// Top inlay layer for flat, multicolor 3MF text
+// -------------------------
+use_flat_multicolor_text = false;
+top_color_layer_height = 0.4;
+
+// -------------------------
+// Output mode
+// "preview" = assembled model (body + flush text inlay)
+// "body"    = body with text pockets + edge notches
+// "text"    = text inlay only
+// "notches" = notch cutters (for debugging)
+// -------------------------
+output_mode = "body";
+
+// -------------------------
+// Edge notch parameters (independent from text)
+// -------------------------
+edge_notch_count = 8;
+edge_notch_width = 2.2;
+edge_notch_depth = 1.2;
+edge_notch_band_height = chip_thickness + 0.1;
+edge_notch_z_offset = 0;
+edge_notch_angle_offset = 0;
+edge_notch_radial_inset = 0;
+
+// -------------------------
+// Row 1 (top arc): "40th Annual"
+// -------------------------
+row1_enabled = true;
+row1_text = "40th Annual";
+row1_font = "Arial:style=Bold";
+row1_size = 3.4;
+row1_layer_height = 0.24;
+row1_rotate = 0;
+row1_x = 0;
+row1_y = 0;
+row1_arc_radius = 11.5;
+row1_arc_span = 105;
+row1_arc_center_angle = 90;
+row1_clockwise = true;
+
+// -------------------------
+// Row 2 (middle straight): "Swink"
+// -------------------------
+row2_enabled = true;
+row2_text = "Swink";
+row2_font = "Arial:style=Bold";
+row2_size = 5.2;
+row2_layer_height = 0.24;
+row2_rotate = 0;
+row2_x = 0;
+row2_y = 0;
+
+// -------------------------
+// Row 3 (bottom arc): "Memorial"
+// -------------------------
+row3_enabled = true;
+row3_text = "Memorial";
+row3_font = "Arial:style=Bold";
+row3_size = 3.4;
+row3_layer_height = 0.24;
+row3_rotate = 0;
+row3_x = 0;
+row3_y = 0;
+row3_arc_radius = 11.5;
+row3_arc_span = 100;
+row3_arc_center_angle = 270;
+row3_clockwise = false;
+
+// -------------------------
+// Helpers
+// -------------------------
+chip_radius = chip_diameter / 2;
+top_layer_h = min(top_color_layer_height, chip_thickness);
+eps = 0.02;
+
+function char_count(s) = len(s);
+function safe_step(span, n) = (n <= 1) ? 0 : span / (n - 1);
+
+module text_on_arc_2d(txt, font_name, txt_size, radius, arc_center_deg, arc_span_deg, clockwise) {
+	n = char_count(txt);
+	step = safe_step(arc_span_deg, n);
+
+	for (i = [0 : n - 1]) {
+		// clockwise (top arc): first char at center+span/2, stepping down
+		// CCW (bottom arc): first char at center-span/2, stepping up
+		angle = (n <= 1)
+			? arc_center_deg
+			: clockwise
+				? arc_center_deg + arc_span_deg / 2 - i * step
+				: arc_center_deg - arc_span_deg / 2 + i * step;
+
+		// top arc: char tops point outward = angle - 90
+		// bottom arc: char tops point inward (up) = angle + 90
+		rot = clockwise ? angle - 90 : angle + 90;
+
+		translate([radius * cos(angle), radius * sin(angle)])
+			rotate(rot)
+				text(
+					text = txt[i],
+					size = txt_size,
+					font = font_name,
+					halign = "center",
+					valign = "center"
+				);
+	}
+}
+
+module row1_shape_2d() {
+	if (row1_enabled)
+		translate([row1_x, row1_y])
+			rotate(row1_rotate)
+				text_on_arc_2d(
+					row1_text,
+					row1_font,
+					row1_size,
+					row1_arc_radius,
+					row1_arc_center_angle,
+					row1_arc_span,
+					row1_clockwise
+				);
+}
+
+module row2_shape_2d() {
+	if (row2_enabled)
+		translate([row2_x, row2_y])
+			rotate(row2_rotate)
+				text(
+					text = row2_text,
+					size = row2_size,
+					font = row2_font,
+					halign = "center",
+					valign = "center"
+				);
+}
+
+module row3_shape_2d() {
+	if (row3_enabled)
+		translate([row3_x, row3_y])
+			rotate(row3_rotate)
+				text_on_arc_2d(
+					row3_text,
+					row3_font,
+					row3_size,
+					row3_arc_radius,
+					row3_arc_center_angle,
+					row3_arc_span,
+					row3_clockwise
+				);
+}
+
+module all_text_shape_2d() {
+	row1_shape_2d();
+	row2_shape_2d();
+	row3_shape_2d();
+}
+
+module text_inlay_3d() {
+	max_h = max(row1_layer_height, max(row2_layer_height, row3_layer_height));
+	h = use_flat_multicolor_text ? min(max_h, top_layer_h) : max_h;
+
+	if (h > 0)
+		translate([0, 0, chip_thickness - h])
+			linear_extrude(height = h)
+				intersection() {
+					all_text_shape_2d();
+					circle(d = chip_diameter - 1.2);
+				}
+}
+
+module edge_notch_cutters() {
+	if (edge_notch_count > 0 && edge_notch_depth > 0 && edge_notch_width > 0 && edge_notch_band_height > 0)
+		for (k = [0 : edge_notch_count - 1]) {
+			ang = edge_notch_angle_offset + k * (360 / edge_notch_count);
+
+			rotate([0, 0, ang])
+				translate([
+					chip_radius - edge_notch_radial_inset - edge_notch_depth / 2,
+					0,
+					chip_thickness / 2 + edge_notch_z_offset
+				])
+					cube([
+						edge_notch_depth + eps,
+						edge_notch_width,
+						edge_notch_band_height
+					], center = true);
+		}
+}
+
+module chip_body_with_text_pockets() {
+	if (use_flat_multicolor_text) {
+		difference() {
+			union() {
+				cylinder(d = chip_diameter, h = chip_thickness - top_layer_h);
+
+				translate([0, 0, chip_thickness - top_layer_h])
+					linear_extrude(height = top_layer_h)
+						difference() {
+							circle(d = chip_diameter);
+							intersection() {
+								all_text_shape_2d();
+								circle(d = chip_diameter - 1.2);
+							}
+						}
+			}
+			edge_notch_cutters();
+		}
+	} else {
+		difference() {
+			cylinder(d = chip_diameter, h = chip_thickness);
+			edge_notch_cutters();
+			// Engrave text into top surface
+			translate([0, 0, chip_thickness - top_color_layer_height])
+				linear_extrude(height = top_color_layer_height + eps)
+					intersection() {
+						all_text_shape_2d();
+						circle(d = chip_diameter - 1.2);
+					}
+		}
+	}
+}
+
+module assembled_preview() {
+	union() {
+		chip_body_with_text_pockets();
+		text_inlay_3d();
+	}
+}
+
+// -------------------------
+// Render selector
+// -------------------------
+if (output_mode == "body") {
+	chip_body_with_text_pockets();
+} else if (output_mode == "text") {
+	text_inlay_3d();
+} else if (output_mode == "notches") {
+	edge_notch_cutters();
+} else {
+	assembled_preview();
+}

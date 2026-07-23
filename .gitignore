@@ -12,6 +12,24 @@
 !Real Estate Investing/**
 !Contrarian Thinking/
 !Contrarian Thinking/**
+!Finances/
+!Finances/**
+!Hunting/
+!Hunting/**
+!Sync Update/
+!Sync Update/**
+!Visual Studio/
+!Visual Studio/**
+!Well Control/
+!Well Control/**
+!.vscode/
+!.vscode/**
+
+# Never track nested git metadata inside project folders
+Visual Studio/.git/
+Visual Studio/.git/**
+Visual Studio/.git_backup_*/
+Visual Studio/.git_backup_*/**
 
 # Ignore common OS/Office temp files
 Thumbs.db
@@ -22,3 +40,6 @@ desktop.ini
 3D Print STL Files/16 Wrenches Deboss.3mf
 3D Print STL Files/16 Wrenches Emboss.3mf
 Real Estate Investing/2881 Cordell Memphis/Google Drive Info/WALKTHROUGH - 2881 Cordell St.mp4
+
+# Oversized Sync Update archives (over GitHub 100MB limit)
+Sync Update/SyncMyRide/*.tar.gz

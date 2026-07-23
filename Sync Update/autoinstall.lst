@@ -1,0 +1,16 @@
+; SYNC3 Consumer Assembly Upgrade - Release 3.0.25 - Only for Nav/NA assemblies.
+
+[SYNCGen3.0_3.0.20204_PRODUCT]
+Item1 = HB5T-14G386-THB
+Open1 = SyncMyRide\HB5T-14G386-THB.tar.gz
+Item2 = HB5T-14G386-TCC
+Open2 = SyncMyRide\HB5T-14G386-TCC.tar.gz
+Item3 = JR3T-14G391-CE
+Open3 = SyncMyRide\JR3T-14G391-CE.tar.gz
+Item4 = JR3T-14G381-AX
+Open4 = SyncMyRide\JR3T-14G381-AX.tar.gz
+Item5 = JR3T-14G423-CB
+Open5 = SyncMyRide\JR3T-14G423-CB.tar.gz
+Item6 = GB5T-14G386-AC
+Open6 = SyncMyRide\GB5T-14G386-AC.tar.gz
+Options = AutoInstall,Delay
