@@ -1,0 +1,38 @@
+window.reactLoaded = () => {
+  bodymovinAnim.spinner.stop();
+  const loadingScreen = document.getElementById('loadingScreen');
+  loadingScreen.classList.add('hide');
+  loadingScreen.classList.remove('show');
+  const reactWrapper = document.getElementById('reactWrapper');
+  reactWrapper.classList.add('show');
+  reactWrapper.classList.remove('hide');
+};
+
+// Override back button logic. code found here
+// https://gist.github.com/w33tmaricich/7009931#file-back_button_override-js-L15
+window.onload = function () {
+  if (typeof history.pushState === "function") {
+    history.pushState('', null, null);
+    window.onpopstate = function () {
+      history.pushState('', null, null);
+      // Handle the back (or forward) buttons here
+      // Will NOT handle refresh, use onbeforeunload for this.
+    };
+  }
+  else {
+    var ignoreHashChange = true;
+    window.onhashchange = function () {
+      if (!ignoreHashChange) {
+        ignoreHashChange = true;
+        window.location.hash = Math.random();
+        // Detect and redirect change here
+        // Works in older FF and IE9
+        // * it does mess with your hash symbol (anchor?) pound sign
+        // delimiter on the end of the URL
+      }
+      else {
+        ignoreHashChange = false;
+      }
+    };
+  }
+}

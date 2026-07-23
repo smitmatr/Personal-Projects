@@ -1,0 +1,33 @@
+const bodymovinAnim = {};
+
+bodymovinAnim.spinner = bodymovin.loadAnimation({
+  container: document.getElementById('spinner'),
+  path: './pub/animations/spinner.json',
+  renderer: 'svg',
+  loop: true, // Optional
+  autoplay: true, // Optional
+  name: "Spinner", // Name for future reference. Optional.
+});
+
+bodymovinAnim.deviceRotate = bodymovin.loadAnimation({
+  container: document.getElementById('device-rotate-anim'),
+  path: './pub/animations/device-rotate.json',
+  renderer: 'svg',
+  loop: true, // Optional
+  autoplay: false, // Optional
+  name: "Device Rotate", // Name for future reference. Optional.
+});
+
+// Portrait
+if (window.orientation === 0) {
+  bodymovinAnim.deviceRotate.play();
+}
+
+window.addEventListener('orientationchange', () => {
+  // Landscape
+  if (window.orientation === 90 || window.orientation === -90) {
+    bodymovinAnim.deviceRotate.stop();
+  } else {
+    bodymovinAnim.deviceRotate.play();
+  }
+}, false);

@@ -1,0 +1,270 @@
+html {
+  box-sizing: border-box;
+  overflow-x: hidden;
+  text-size-adjust: 100%;
+	-ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+	-webkit-tap-highlight-color: transparent;
+}
+body {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+	font-family: 'Open Sans', Arial, sans-serif;
+	font-size: 16px;
+	color: #333333;
+	background-color: #002120;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+.flex-col, .flex-row {
+  display: flex;
+  display: -webkit-flex;
+  justify-content: center;
+  -webkit-justify-content: center;
+  align-items: center;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+.flex-row {
+  flex-direction: row;
+  -webkit-flex-direction: row;
+}
+.flex-col {
+  flex-direction: column;
+  -webkit-flex-direction: column;
+}
+.show-global-nav {
+  position: fixed;
+  /* our container overlaps global nav ~10px on chromebook, 5px on iPad.
+  Using max overlap of 10px (global nav has height 80px) for all views */
+  top: 70px;
+}
+.show {
+  display: flex;
+  display: -webkit-flex;
+}
+.hide {
+  display: none !important;
+}
+.amp-nav-overlay {
+  position: fixed;
+  display: block;
+  width: 100%;
+  height: 80px;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  background-color: #110a02;
+  opacity: 0.8;
+}
+.amp-nav-logout-overlay {
+  position: fixed;
+  display: block;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 98;
+  background-color: #110a02;
+  opacity: 0.8;
+}
+.amp-nav {
+  z-index: 9998;
+}
+button.unav-button > * {
+  pointer-events: none;
+}
+.season-3 .amp-nav .unav-logout-modal {
+  max-height: 576px !important;
+  top: 68 !important;
+  left: 430 !important;
+}
+.season-3 .amp-nav .unav-logout-modal .unav-logout-modal-content {
+  width: 504px !important;
+  height: 388px !important;
+}
+.season-3 .amp-nav .unav-logout-modal .unav-logout-modal-content .unav-close-button {
+  width: 60px !important;
+  height: 60px !important;
+}
+.season-3 .amp-nav .unav-logout-modal .unav-logout-modal-content .unav-modal-header {
+  font-size: 39px !important;
+  margin: 52px 0 22px !important;
+}
+.season-3 .amp-nav .unav-logout-modal .unav-logout-modal-content .unav-modal-text {
+  font-size: 21px !important;
+}
+.season-3 .amp-nav .unav-logout-modal .unav-logout-modal-content .unav-modal-button {
+  width: 224px !important;
+  height: 67px !important;
+  font-size: 21px !important;
+}
+.season-3 .amp-nav .unav-logout-modal .unav-logout-modal-content .unav-back-button {
+  margin: 28px 0 14px !important;
+}
+.season-3 .amp-nav .unav-logout-modal .unav-logout-modal-content .unav-back-button .unav-button-logo {
+  width: 31px !important;
+  margin-right: 34px !important;
+}
+.season-3 .amp-nav .unav-logout-modal .unav-logout-modal-content .unav-logout-button {
+  margin: 14px 0 20px !important;
+}
+.season-3 .amp-nav .unav-logout-modal .unav-logout-modal-content .unav-logout-button .unav-button-logo {
+  height: 36px !important;
+  width: 36px !important;
+  margin-right: 34px !important;
+}
+.unav-overlay {
+  /* using display: none disables the clickOutside functionality of global nav logout modal */
+  opacity: 0 !important;
+}
+#loadingScreen {
+  width: 1024px;
+  height: 576px;
+}
+#grassBg {
+  position: absolute;
+}
+#bushes {
+  position: absolute;
+  z-index: 999;
+}
+.loadingGif {
+  position: absolute;
+  height: 188px;
+  z-index: 950;
+}
+.catLizard {
+  top: 140;
+  left: 250;
+}
+.birdRabbit {
+  top: 90;
+}
+.mooseBear {
+  top: 130;
+  right: 330;
+  z-index: 1050;
+}
+#loadingPercentage {
+  bottom: 200;
+}
+#loadingBar {
+  width: 372px;
+  height: 32px;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  bottom: 140;
+  border-radius: 16px;
+  background: #FFFFFF;
+}
+progress::-webkit-progress-bar {
+  appearance: none;
+  -webkit-appearance: none;
+  border-radius: 16px;
+  background-color: #32CCFA;
+}
+#loadingProgress {
+  width: 0%;
+  height: 24px;
+  margin: 5px;
+  border-radius: 16px;
+  background-color: #32CCFA;
+  transition: width 0.5s ease;
+}
+#loadingPercentage, #loadingMessage {
+  position: absolute;
+  font: 700 25px/32px Quicksand Bold;
+  color: #FFFFFF;
+}
+#loadingMessage {
+  bottom: 70;
+}
+#reactWrapper {
+  max-width: 1024px;
+  max-height: 576px;
+}
+#spinner {
+  position: absolute;
+  z-index: 9998;
+  width: 100px;
+  height: 100px;
+}
+@media only screen 
+and (min-device-width : 768px) 
+and (max-device-width : 1024px) 
+and (orientation : landscape) {
+  #spinner{
+    margin: auto;
+    position: absolute;
+    top: 0; left: 0; bottom: 0; right: 0;
+  }
+}
+.device-rotate-warning {
+  z-index: 9999;
+  display: none;
+  width: 100vw;
+  height: 100vh;
+  background-color: #384e4a;
+}
+#device-rotate-anim {
+  width: 50%;
+  height: 50%;
+}
+.device-rotate-warning p {
+  margin-top: 150px;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 42px;
+  text-align: center;
+  color: #ffe36d;
+}
+@media only screen
+and (min-device-width : 768px)
+and (max-device-width : 1024px)
+and (orientation: portrait),
+only screen
+and (min-device-width : 375px)
+and (max-device-width : 812px)
+and (-webkit-device-pixel-ratio : 3)
+and (orientation : portrait),
+only screen
+and (min-device-width : 375px)
+and (max-device-width : 667px)
+and (orientation : portrait),
+only screen
+and (min-device-width : 414px)
+and (max-device-width : 736px)
+and (orientation : portrait),
+only screen
+and (min-device-width : 320px)
+and (max-device-width : 568px)
+and (orientation : portrait),
+only screen
+and (min-device-width : 320px)
+and (max-device-width : 480px)
+and (orientation : portrait) {
+  .device-rotate-warning {
+    display: flex;
+    display: -webkit-flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+  }
+  .app-window {
+    display: none;
+  }
+  #reactWrapper {
+    visibility: hidden;
+    z-index: -1;
+  }
+  #loadingScreen {
+    display: none;
+  }
+}
