@@ -304,6 +304,43 @@ def build_series(df: pd.DataFrame, hunt_code: str) -> dict:
     }
 
 
+def build_draw_odds_series(df: pd.DataFrame, hunt_code: str) -> dict:
+    area = df[df["HuntCode"] == hunt_code].copy()
+    if area.empty:
+        return {"years": [], "applicants": [], "draw_odds_pct": []}
+
+    min_year = int(df["Year"].min())
+    max_year = int(df["Year"].max())
+    all_years = list(range(min_year, max_year + 1))
+
+    area = area.set_index("Year").reindex(all_years).reset_index()
+
+    if "Applicants" in area.columns:
+        applicants = area["Applicants"].fillna(0)
+    else:
+        applicants = area.get("Hunters", pd.Series([0] * len(area))).fillna(0)
+
+    permits = area.get("Permits", pd.Series([0] * len(area))).fillna(0)
+    success = area.get("SuccessPct", pd.Series([None] * len(area)))
+
+    draw_odds = []
+    for idx, applicant_total in enumerate(applicants.tolist()):
+        applicant_value = float(applicant_total) if pd.notna(applicant_total) else 0.0
+        if applicant_value > 0:
+            permit_value = float(permits.iloc[idx]) if pd.notna(permits.iloc[idx]) else 0.0
+            draw_odds.append((permit_value / applicant_value) * 100.0)
+        elif pd.notna(success.iloc[idx]):
+            draw_odds.append(float(success.iloc[idx]))
+        else:
+            draw_odds.append(None)
+
+    return {
+        "years": [int(v) for v in area["Year"].fillna(0).tolist()],
+        "applicants": [float(v) for v in applicants.tolist()],
+        "draw_odds_pct": [float(v) if v is not None and pd.notna(v) else None for v in draw_odds],
+    }
+
+
 def gmu_to_hunts_from_lookup(lookup: dict[str, dict]) -> dict[str, list[str]]:
     mapping: dict[str, list[str]] = {}
     for hunt_code, info in lookup.items():
@@ -422,6 +459,7 @@ def hunt_details(hunt_code: str):
         "large_hunt_url": map_url,
         "links": links,
         "series": build_series(df, code),
+        "draw_odds": build_draw_odds_series(df, code),
     }
     return jsonify(payload)
 

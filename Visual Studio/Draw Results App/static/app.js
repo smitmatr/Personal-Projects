@@ -1,4 +1,5 @@
 let chart;
+let oddsChart;
 let selectedSpecies = "sheep";
 
 function buildChart(series, gmuLabel = "", huntCode = "") {
@@ -95,6 +96,92 @@ function buildChart(series, gmuLabel = "", huntCode = "") {
   });
 }
 
+function buildOddsChart(series, gmuLabel = "", huntCode = "") {
+  const ctx = document.getElementById("oddsChart").getContext("2d");
+  if (oddsChart) {
+    oddsChart.destroy();
+  }
+
+  const titleText = huntCode
+    ? `Unit ${gmuLabel || "Unknown"} — ${huntCode} Applicants vs. Draw Odds`
+    : `Unit ${gmuLabel || "Unknown"} Applicants vs. Draw Odds`;
+
+  const hasApplicants = Array.isArray(series.applicants) && series.applicants.some((value) => value > 0);
+
+  oddsChart = new Chart(ctx, {
+    data: {
+      labels: series.years,
+      datasets: [
+        {
+          type: "bar",
+          label: "Applicants",
+          data: series.applicants,
+          borderColor: "#0f6c63",
+          backgroundColor: "rgba(15, 108, 99, 0.7)",
+          yAxisID: "y",
+        },
+        {
+          type: "line",
+          label: "Draw odds %",
+          data: series.draw_odds_pct,
+          borderColor: "#d97706",
+          backgroundColor: "#d97706",
+          pointRadius: 4,
+          pointHoverRadius: 5,
+          borderDash: [6, 4],
+          tension: 0.2,
+          yAxisID: "y2",
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        title: {
+          display: true,
+          text: titleText,
+          font: {
+            size: 15,
+            weight: "600",
+          },
+        },
+        tooltip: {
+          callbacks: {
+            label(tooltipItem) {
+              const label = tooltipItem.dataset.label || "";
+              if (label === "Draw odds %") {
+                return `${label}: ${Number(tooltipItem.raw).toFixed(1)}%`;
+              }
+              return `${label}: ${Number(tooltipItem.raw).toLocaleString()}`;
+            },
+          },
+        },
+      },
+      scales: {
+        y: {
+          position: "left",
+          title: {
+            display: true,
+            text: hasApplicants ? "Applicants / Primary Applications" : "Applicants",
+          },
+        },
+        y2: {
+          position: "right",
+          min: 0,
+          max: 100,
+          grid: {
+            drawOnChartArea: false,
+          },
+          title: {
+            display: true,
+            text: "Draw odds %",
+          },
+        },
+      },
+    },
+  });
+}
+
 async function loadHunt(code) {
   const status = document.getElementById("statusText");
   status.textContent = `Loading data for ${code}...`;
@@ -121,6 +208,7 @@ async function loadHunt(code) {
 
   const selectedGmu = document.getElementById("gmuSelect").value || "Unknown";
   buildChart(data.series, selectedGmu, data.hunt_code);
+  buildOddsChart(data.draw_odds || { years: [], applicants: [], draw_odds_pct: [] }, selectedGmu, data.hunt_code);
 
   status.textContent = `Updated ${data.hunt_code} in GMU ${selectedGmu}.`;
 }
