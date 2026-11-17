@@ -336,7 +336,12 @@ def get_species_gmu_mapping(species: str) -> dict[str, list[str]]:
     return {"All": all_hunts}
 
 
-def draw_map_url(species: str, hunt_code: str) -> str:
+def draw_map_url(species: str, hunt_code: str, gmus: list[str] | None = None) -> str:
+    if gmus:
+        clean = sorted({str(g).strip() for g in gmus if str(g).strip()})
+        if clean:
+            return GMU_INFO_BASE.format(gmu=clean[0])
+
     sp = species_config(species).get("map_sp", "sheep")
     return f"https://www.adfg.alaska.gov/index.cfm?adfg=hunting.largehuntmap&sp={sp}&hunt={hunt_code.lower()}"
 
@@ -407,7 +412,7 @@ def hunt_details(hunt_code: str):
     for gmu in gmus:
         links.append({"label": f"Open official GMU {gmu} map/info", "url": GMU_INFO_BASE.format(gmu=gmu)})
 
-    map_url = draw_map_url(species_key, code)
+    map_url = draw_map_url(species_key, code, gmus)
     payload = {
         "species": species_key,
         "hunt_code": code,

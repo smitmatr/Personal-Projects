@@ -111,12 +111,13 @@ async function loadHunt(code) {
   document.getElementById("infoHeading").textContent = `Draw Unit Map & Details for ${data.hunt_code}`;
   document.getElementById("huntLabel").textContent = data.hunt_code;
 
-  const mapUrl = data.resolved_draw_url || getDrawMapUrl(data.hunt_code, species);
+  const gmuTarget = (data.gmus && data.gmus.length) ? String(data.gmus[0]) : (document.getElementById("gmuSelect").value || "13");
+  const mapUrl = getGmuMapUrl(gmuTarget);
   document.getElementById("huntMapFrame").src = mapUrl;
 
   const resolved = document.getElementById("resolvedUrl");
   resolved.href = mapUrl;
-  resolved.textContent = `Open official ADF&G page for ${data.hunt_code}`;
+  resolved.textContent = `Open official ADF&G GMU page for ${data.hunt_code}`;
 
   const selectedGmu = document.getElementById("gmuSelect").value || "Unknown";
   buildChart(data.series, selectedGmu, data.hunt_code);
