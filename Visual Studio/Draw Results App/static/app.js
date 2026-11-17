@@ -124,14 +124,25 @@ async function loadHunt(code) {
   status.textContent = `Updated ${data.hunt_code} in GMU ${selectedGmu}.`;
 }
 
+function normalizeGmu(gmu) {
+  return String(gmu ?? "").trim().replace(/^0+/, "");
+}
+
 function getGmuMapUrl(gmu) {
-  if (gmu === "14") {
+  const normalized = normalizeGmu(gmu);
+
+  if (normalized === "1" || normalized === "8") {
+    return `https://www.adfg.alaska.gov/index.cfm?adfg=huntingmaps.gmuinfo&gmu=${normalized}`;
+  }
+
+  if (normalized === "14") {
     return "https://www.adfg.alaska.gov/static/hunting/maps/gmumaps/gif/14ab.gif";
   }
-  if (gmu === "13") {
+  if (normalized === "13") {
     return "https://www.adfg.alaska.gov/static/hunting/maps/gmumaps/gif/13.gif";
   }
-  return `https://www.adfg.alaska.gov/static/hunting/maps/gmumaps/gif/${gmu}.gif`;
+
+  return `https://www.adfg.alaska.gov/static/hunting/maps/gmumaps/gif/${normalized}.gif`;
 }
 
 function getDrawMapUrl(code, species = selectedSpecies) {

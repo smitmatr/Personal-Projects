@@ -42,12 +42,13 @@
     <section class="card map-panel">
       <h2>Alaska Unit Map</h2>
       <div class="iframe-wrap map-wrap">
-        <img
+        <iframe
           id="gmuMapFrame"
-          alt="Alaska GMU map reference"
+          title="Alaska GMU map reference"
           loading="lazy"
-          src="https://www.adfg.alaska.gov/static/hunting/maps/gmumaps/gif/13.gif"
-        >
+          referrerpolicy="no-referrer-when-downgrade"
+          src="https://www.adfg.alaska.gov/index.cfm?adfg=huntingmaps.gmuinfo&gmu=13"
+        ></iframe>
       </div>
     </section>
 
@@ -57,10 +58,10 @@
         <p><strong>Selected unit:</strong> <span id="gmuLabel">13</span></p>
         <p><strong>Selected hunt:</strong> <span id="huntLabel">DS126</span></p>
         <p>
-          <a id="resolvedUrl" href="#" target="_blank" rel="noopener noreferrer">Open official ADF&amp;G page in a new tab</a>
+          <a id="resolvedUrl" class="inline-link" href="#" target="_blank" rel="noopener noreferrer">Open official ADF&amp;G page in a new tab</a>
         </p>
       </div>
-      <div class="iframe-wrap">
+      <div class="iframe-wrap embed-wrap">
         <iframe
           id="huntMapFrame"
           title="ADF&G hunt draw map and unit details"
