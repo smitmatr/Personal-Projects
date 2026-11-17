@@ -4,6 +4,7 @@
 # Keep repo metadata files
 !.gitignore
 !README.md
+!render.yaml
 
 # Track selected project folders
 !3D Print STL Files/

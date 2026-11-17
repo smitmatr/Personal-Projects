@@ -43,3 +43,33 @@ This folder now includes a Flask web app that shows:
 - static/app.js: frontend logic and chart rendering
 - static/styles.css: page styling
 - sheep_draw_by_area_raw.csv: local trend dataset for charting
+
+## Deploy to a Public URL (Render)
+
+This repo now includes a deployment blueprint file at the repo root:
+- render.yaml
+
+That file is already configured to deploy this app from:
+- Visual Studio/Draw Results App
+
+### One-time setup
+
+1. Log into Render:
+   - https://render.com/
+2. Click New + and choose Blueprint.
+3. Connect your GitHub account/repository:
+   - smitmatr/Personal-Projects
+4. Render will detect render.yaml automatically.
+5. Click Apply and wait for deployment to finish.
+
+### Share with your friend
+
+After deploy succeeds, Render gives you a URL like:
+- https://alaska-draw-results-app.onrender.com
+
+Email that URL to your friend. They can use the app in a browser with no local setup.
+
+### Notes
+
+- Free plans may sleep after inactivity; first load can take a moment.
+- If you push new changes to main, Render can auto-redeploy.
